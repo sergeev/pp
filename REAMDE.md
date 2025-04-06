@@ -152,10 +152,138 @@ plt.show()
 
 ---
 
-**Как начать**:  
-1. Установите зависимости:  
-   ```bash
-   pip install requests beautifulsoup4 pandas pygame python-telegram-bot matplotlib
-   ```
-2. Адаптируйте код под свои нужды (например, укажите актуальные URL или токены).  
-3. Постепенно усложняйте проекты: добавляйте новые функции, улучшайте интерфейс, тестируйте код.
+### 6. Калькулятор (для начинающих)
+**Описание**: Консольный калькулятор с базовыми операциями.
+```python
+def add(a, b):
+    return a + b
+
+def subtract(a, b):
+    return a - b
+
+def multiply(a, b):
+    return a * b
+
+def divide(a, b):
+    return a / b if b != 0 else "Ошибка: деление на ноль"
+
+print("Выберите операцию:")
+print("1. Сложение")
+print("2. Вычитание")
+print("3. Умножение")
+print("4. Деление")
+
+choice = input("Введите номер операции (1-4): ")
+num1 = float(input("Введите первое число: "))
+num2 = float(input("Введите второе число: "))
+
+if choice == '1':
+    print(f"Результат: {add(num1, num2)}")
+elif choice == '2':
+    print(f"Результат: {subtract(num1, num2)}")
+elif choice == '3':
+    print(f"Результат: {multiply(num1, num2)}")
+elif choice == '4':
+    print(f"Результат: {divide(num1, num2)}")
+else:
+    print("Неверный ввод")
+```
+
+---
+
+### 7. Игра "Угадай число"
+**Описание**: Программа загадывает число, пользователь угадывает.
+```python
+import random
+
+secret_number = random.randint(1, 100)
+attempts = 0
+
+print("Угадайте число от 1 до 100!")
+
+while True:
+    guess = int(input("Ваш вариант: "))
+    attempts += 1
+
+    if guess < secret_number:
+        print("Загаданное число больше!")
+    elif guess > secret_number:
+        print("Загаданное число меньше!")
+    else:
+        print(f"Поздравляем! Вы угадали за {attempts} попыток.")
+        break
+```
+
+---
+
+### 8. Веб-приложение на Flask
+**Описание**: Простой блог с использованием Flask и SQLite.
+```python
+from flask import Flask, render_template, request, redirect
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+db = SQLAlchemy(app)
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100))
+    content = db.Column(db.Text)
+
+@app.route('/')
+def index():
+    posts = Post.query.all()
+    return render_template('index.html', posts=posts)
+
+@app.route('/create', methods=['GET', 'POST'])
+def create():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        post = Post(title=title, content=content)
+        db.session.add(post)
+        db.session.commit()
+        return redirect('/')
+    return render_template('create.html')
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
+```
+
+**Шаблоны** (в папке `templates`):
+- `index.html`: Отображение постов.
+- `create.html`: Форма для создания поста.
+
+---
+
+### 9. Анализ данных с Pandas
+**Описание**: Анализ CSV-файла и визуализация.
+```python
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Загрузка данных
+df = pd.read_csv('data.csv')
+
+# Статистика
+print(df.describe())
+
+# График распределения
+df['Возраст'].hist()
+plt.title('Распределение возраста')
+plt.xlabel('Возраст')
+plt.ylabel('Количество')
+plt.show()
+```
+
+**Примечание**: Требуются `pandas` и `matplotlib` (`pip install pandas matplotlib`).
+
+---
+
+Каждый из этих проектов можно расширять и модифицировать. Например:
+- Добавить аутентификацию в блог на Flask.
+- Реализовать кэширование в погодном парсере.
+- Создать GUI для калькулятора с помощью Tkinter/PyQt.
